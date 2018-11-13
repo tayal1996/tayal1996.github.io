@@ -1,0 +1,102 @@
+<html>
+<head>
+  <title>Lost comics</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <style>
+
+    .allbutton{
+      margin-right: 4;
+      margin-top: 4;
+    }
+    img{
+      border-radius:2%;
+    }
+  </style>
+</head>
+
+<body style="background-color:black;">
+<center>
+  <div>
+    <b><h2 style="color:grey" id="maintitle"></h2></b>
+
+  </div>
+  <div >
+          <button onclick="getfirstimage()" type="button" class="allbutton">|<</button>
+          <button onclick="getprevimage()" type="button" class="allbutton"><<</button>
+          <button onclick="getrandomimage()" type="button" class="allbutton">Random</button>
+          <button onclick="getnextimage()" type="button" class="allbutton">>></button>
+          <button onclick="getlastimage()" type="button" class="allbutton">>|</button></
+  </div>
+
+  <div  style="width:500px; height:500px; margin:10px">
+      <img alt="ComicPageWasSuppoesedToBeLoaded"  id="photo">
+  </div>
+</center>
+<script>
+    var i=1;
+    var low=1;
+    var high=1;
+    var xmlHttp = new XMLHttpRequest();
+    url  = "https://xkcd.com/info.0.json";
+    xmlHttp.open("GET",url,false);
+    xmlHttp.send(null);
+
+    var val = xmlHttp.responseText;
+    var jobj = JSON.parse(val);
+
+    high=jobj.num;
+
+function project(){
+
+  var xmlHttp = new XMLHttpRequest();
+  url  = "https://xkcd.com/"+i+"/info.0.json";
+  // alert(url);
+  xmlHttp.open("GET",url,false);
+  xmlHttp.send(null);
+
+  var data = xmlHttp.responseText;
+  var dataobj = JSON.parse(data);
+  document.getElementById("maintitle").innerHTML = dataobj.title;
+  document.getElementById("photo").src = dataobj.img;
+
+}
+project();
+
+
+function getfirstimage(){
+  i=low;
+  project();
+}
+function getprevimage(){
+  i--;
+  if(i!=0){
+    project();
+  }
+  else {
+    i++;
+  }
+
+}
+function getrandomimage(){
+  i = Math.floor(Math.random() * (+high - +low)) + +low;
+  project();
+}
+function getnextimage(){
+  i++;
+  if(i!=high+1){
+    project();
+  }
+  else {
+    i--;
+  }
+
+}
+function getlastimage(){
+  i=high;
+  project();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<html>
+<head>
+  <title>Try it yourself</title>
+</head>
+<body>
+
+    <div style="width:100%;">
+        <div id="button">
+        <input onclick="runCode(0);" type="button" value="Run">
+
+        <style>
+
+          input{
+            margin-bottom: 4;
+          }
+          .mybutton{
+            margin-left: 8;
+          }
+        </style>
+    </div>
+
+    <div style="width:100%; height:450px;">
+            <div style="width:50%; align:center; float:left;">
+            <div style="float:left;">INPUT </div>
+            <div id="button">
+            <input class="mybutton" onclick="runCode(2);" type="button" value="Clear"></div>
+            </div>
+        <div style="width:50%; align:center; float:right;">
+            <div style="float:left;">OUTPUT </div>
+            <div id="button">
+            <input class="mybutton" onclick="runCode(1);" type="button" value="Clear"></div>
+        </div>
+
+          <div style="width:50%; height:100%; float:left;">
+                  <textarea name="sourceCode" id="sourceCode" style="width:100%; height:100%;"><strong> Change me! </strong></textarea>
+          </div>
+          <div style="width:50%; height:100%; float:right;">
+              <iframe name="targetCode" id="targetCode" style="width:100%; height:100%;"></iframe>
+          </div>
+    </div>
+
+    <script>
+    function runCode(i)
+    {
+        if(i==2)
+        {document.getElementById("sourceCode").value = "";
+        return false;}
+        var content = document.getElementById('sourceCode').value;
+        var iframe = document.getElementById('targetCode');
+        iframe = (iframe.contentWindow) ? iframe.contentWindow : (iframe.contentDocument.document) ? iframe.contentDocument.document : iframe.contentDocument;
+        iframe.document.open();
+        if(i==1)
+        content='';
+        iframe.document.write(content);
+        iframe.document.close();
+        return false;
+    }
+    runCode(0);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Clock</title>
+    <style>
+      html, body {
+        background-color: #eee;
+        font-size: 80%;
+        height: 100%;
+        width: 100%;
+      }
+      td {
+        text-align: center;
+      }
+      #container {
+        height: 100%;
+        vertical-align: middle;
+        width: 100%;
+      }
+      #clock {
+        fill: white;
+        stroke: #000;
+        stroke-linecap: round;
+      }
+      #surface {
+        stroke-width: 2px;
+      }
+      #hourpointer {
+        stroke-width: 4px;
+      }
+      #secondpointer {
+        stroke: red;
+        stroke-width: 1px;
+      }
+      #minutepointer {
+        stroke-width: 2px;
+      }
+      #numbers {
+        font-family: sans-serif;
+        font-size: 80%;
+      }
+    </style>
+    <script>
+      function timerTick() {
+        with (new Date()) {
+          var h, m, s;
+
+          h = 30 * ((getHours() % 12) + getMinutes() / 60);
+          m = 6 * getMinutes();
+          s = 6 * getSeconds();
+
+          document.getElementById('hourpointer').setAttribute('transform', 'rotate(' + h + ', 50, 50)');
+          document.getElementById('minutepointer').setAttribute('transform', 'rotate(' + m + ', 50, 50)');
+          document.getElementById('secondpointer').setAttribute('transform', 'rotate(' + s + ', 50, 50)');
+
+          setTimeout(timerTick, 1000);
+        }
+      }
+    </script>
+  </head>
+  <body onload='timerTick()'>
+    <table id='container'>
+      <tr>
+        <td>
+          <svg id='clock' viewBox='0 0 100 100' width='400' height='400'>
+            <circle id='surface' cx='50' cy='50' r='45'/>
+            <g id='pointers'>
+              <line id='hourpointer' x1='50' y1='50' x2='50' y2='27' />
+              <line id='minutepointer' x1='50' y1='50' x2='50' y2='17' />
+              <line id='secondpointer' x1='50' y1='50' x2='50' y2='13' />
+            </g>
+            <g id='numbers'>
+              <text x='43' y='18'>12</text>
+              <text x='65' y='23'>1</text>
+              <text x='79' y='36'>2</text>
+              <text x='85' y='54'>3</text>
+              <text x='79' y='72'>4</text>
+              <text x='65' y='85'>5</text>
+              <text x='47' y='91'>6</text>
+              <text x='29' y='85'>7</text>
+              <text x='15' y='72'>8</text>
+              <text x='9' y='54'>9</text>
+              <text x='14' y='36'>10</text>
+              <text x='25' y='23'>11</text>
+            </g>
+          </svg>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,294 @@
+<html>
+<head>
+  <style>
+  body {
+      font-family: sans-serif;
+      background: url(whitewalkers.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  #heading{
+    color: white;
+  }
+
+  form{
+    margin:auto;
+    max-width:300px;
+  }
+
+  th, td {
+    padding: 6px;
+    text-align: left;
+    color: white;
+  }
+
+  .column {
+      float: left;
+      width: 33.33%;
+      padding: 8px;
+  }
+  * {
+      box-sizing: border-box;
+  }
+  </style>
+</head>
+  <body>
+    <center>
+      <h2 id="heading"><br><u>The Song of Ice and Fire</u></h2>
+
+
+      <div>
+        <form  action="#">
+          <input type="text" placeholder="Search.." name="charSearch" id="searchInput">
+          <input type="button" value="Search Character" onclick="getData(1)"></input>
+          <input type="button" value="Search House" onclick="getData(2)"></input>
+          <input type="button" value="Characters from the House" onclick="getData(3)"></input>
+          <input type="button" value="Random Character" onclick="getData(4)"></input>
+          <input type="button" value="Random House" onclick="getData(5)"></input>
+        </form>
+      </div>
+      <br>
+      </center>
+      <div class="column">
+        <table>
+          <hr>
+          <tr>
+            <td id="r11"></td>
+            <td id="r12"></td>
+          </tr>
+          <tr>
+            <td id="r21"></td>
+            <td id="r22"></td>
+          </tr>
+          <tr>
+            <td id="r31"></td>
+            <td id="r32"></td>
+          </tr>
+          <tr>
+            <td id="r41"></td>
+            <td id="r42"></td>
+          </tr>
+          <tr>
+            <td id="r51"></td>
+            <td id="r52"></td>
+          </tr>
+          <tr>
+              <td colspan="2"><a href="javascript:nextPage()" id="nextbutton">❯</a></td>
+          </tr>
+        </table>
+          <hr>
+      </div>
+
+  </body>
+  <script>
+      var current_page = 1;
+      var records_per_page = 1;
+      var obj;
+      var curr_type;
+
+      function changePage(page)
+      {
+          var r11 = document.getElementById("r11");
+          var r21 = document.getElementById("r21");
+          var r31 = document.getElementById("r31");
+          var r41 = document.getElementById("r41");
+          var r51 = document.getElementById("r51");
+
+          var r12 = document.getElementById("r12");
+          var r22 = document.getElementById("r22");
+          var r32 = document.getElementById("r32");
+          var r42 = document.getElementById("r42");
+          var r52 = document.getElementById("r52");
+
+          var HouseName = document.getElementById("r12");
+          var region = document.getElementById("r22");
+          var coatofarms = document.getElementById("r32");
+          var words = document.getElementById("r42");
+          var overlord = document.getElementById("r52");
+
+          var nextbutton = document.getElementById("nextbutton");
+
+          if (page < 1) page = 1;
+          if (page > numPages()) page = numPages();
+          if(curr_type == 1){
+            r11.innerHTML = "Character Name:";
+            r21.innerHTML = "Gender:";
+            r31.innerHTML = "Culture:";
+            r41.innerHTML = "Aliases";
+            r51.innerHTML = "TV Series";
+            r12.innerHTML = "";
+            r22.innerHTML = "";
+            r32.innerHTML = "";
+            r42.innerHTML = "";
+            r52.innerHTML = "";
+            for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
+                r12.innerHTML += obj[i].name;
+                r22.innerHTML += obj[i].gender;
+                r32.innerHTML += obj[i].culture;
+                r42.innerHTML += obj[i].aliases;
+                r52.innerHTML += obj[i].tvSeries;
+            }
+
+            if (page == numPages()) {
+                nextbutton.style.visibility = "hidden";
+            }else {
+                nextbutton.style.visibility = "visible";
+            }
+          }
+          else{
+            r11.innerHTML = "House Name:";
+            r21.innerHTML = "Region";
+            r31.innerHTML = "Coats of Arms:";
+            r41.innerHTML = "Words";
+            r51.innerHTML = "Overlord";
+            HouseName.innerHTML = "";
+            region.innerHTML = "";
+            coatofarms.innerHTML = "";
+            words.innerHTML = "";
+            overlord.innerHTML = "";
+            for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
+                HouseName.innerHTML += obj[i].name;
+                region.innerHTML += obj[i].region;
+                coatofarms.innerHTML += obj[i].coatOfArms;
+                words.innerHTML += obj[i].words;
+                overlord.innerHTML += obj[i].overlord;
+            }
+
+            if (page == numPages()) {
+                nextbutton.style.visibility = "hidden";
+            }else {
+                nextbutton.style.visibility = "visible";
+            }
+          }
+      }
+
+      function nextPage()
+      {
+          if (current_page < numPages()) {
+              current_page++;
+              changePage(current_page);
+          }
+      }
+
+
+      function numPages()
+      {
+          return Math.ceil(obj.length / records_per_page);
+      }
+
+      window.onload = function() {
+          nextbutton.style.visibility = "hidden";
+          nextbutton.style.visibility = "hidden";
+          random_nextbutton.style.visibility = "hidden";
+      };
+    function FetchHelper(new_url, type, passtext){
+      var MembersSize = 0;
+      var url = new URL(new_url);
+      var myFetch = fetch(url);
+
+        myFetch.then(function(response) {
+          response.text().then(function(text) {
+            obj = JSON.parse(text);
+            if(type == 3){
+              MembersSize = obj[0].swornMembers.length;
+              var randomNumber = Math.floor(Math.random() * (+MembersSize - +1)) + +1 ;
+              new_url = obj[0].swornMembers[randomNumber-1];
+              var url = new URL(new_url);
+              var myFetch = fetch(url);
+
+              myFetch.then(function(new_response) {
+                new_response.text().then(function(str) {
+                  var new_obj = JSON.parse(str);
+                  document.getElementById("r11").innerHTML = "Character Name:";
+                  document.getElementById("r21").innerHTML = "Gender:";
+                  document.getElementById("r31").innerHTML = "Culture:";
+                  document.getElementById("r41").innerHTML = "Aliases";
+                  document.getElementById("r51").innerHTML = "TV Series";
+                  document.getElementById("r12").innerHTML = new_obj.name;
+                  document.getElementById("r22").innerHTML = new_obj.gender;
+                  document.getElementById("r32").innerHTML = new_obj.culture;
+                  document.getElementById("r42").innerHTML = new_obj.aliases;
+                  document.getElementById("r52").innerHTML = new_obj.tvSeries;
+                  poemDisplay.textContent = text;
+                });
+              });
+            }
+            if(type == 1 && passtext == "random"){
+              document.getElementById("r11").innerHTML = "Character Name:";
+              document.getElementById("r21").innerHTML = "Gender:";
+              document.getElementById("r31").innerHTML = "Culture:";
+              document.getElementById("r41").innerHTML = "Aliases";
+              document.getElementById("r51").innerHTML = "TV Series";
+              document.getElementById("r12").innerHTML = obj.name;
+              document.getElementById("r22").innerHTML = obj.gender;
+              document.getElementById("r32").innerHTML = obj.culture;
+              document.getElementById("r42").innerHTML = obj.aliases;
+              document.getElementById("r52").innerHTML = obj.tvSeries;
+            }
+            else if(type == 1){
+              nextbutton.style.visibility = "visible";
+              curr_type = 1;
+              changePage(1);
+            }
+            else if(type == 2 && passtext === "random"){
+              document.getElementById("r11").innerHTML = "House Name:";
+              document.getElementById("r21").innerHTML = "Region";
+              document.getElementById("r31").innerHTML = "Coats of Arms:";
+              document.getElementById("r41").innerHTML = "Words";
+              document.getElementById("r51").innerHTML = "Overlord";
+              document.getElementById("r12").innerHTML = obj.name;
+              document.getElementById("r22").innerHTML = obj.region;
+              document.getElementById("r32").innerHTML = obj.coatOfArms;
+              document.getElementById("r42").innerHTML = obj.words;
+              document.getElementById("r52").innerHTML = obj.overlord;
+            }
+            else if(type == 2){
+              if(obj[0].name == " "){
+                alert("Data Not Found!");
+              }
+              else{
+                nextbutton.style.visibility = "visible";
+                curr_type = 2;
+                changePage(1);
+              }
+            }
+          });
+        });
+
+    }
+    var new_url;
+    function getData(choice){
+      passtext=  document.getElementById('searchInput').value;
+      passtext = passtext.trim().replace(/ /g, '%20');
+      var randomNumber = Math.floor(Math.random() * (+300 - +1)) + +1 ;
+      if(choice==4){
+        passtext='random';
+        new_url = "https://www.anapioficeandfire.com/api/characters/" + randomNumber;
+        FetchHelper(new_url, 1, passtext);
+      }
+      else if(choice==5){
+        passtext='random';
+        new_url = "https://www.anapioficeandfire.com/api/houses/" + randomNumber;
+        FetchHelper(new_url, 2, passtext);
+      }
+      else if(passtext != ""){
+        if(choice == 1){
+          new_url = "https://www.anapioficeandfire.com/api/characters?name="+ passtext;
+          FetchHelper(new_url, 1, passtext);
+        }
+        else if(choice == 2){
+          new_url = "https://www.anapioficeandfire.com/api/houses?name=" + passtext;
+          FetchHelper(new_url, 2, passtext);
+        }
+        else{
+          new_url = "https://www.anapioficeandfire.com/api/houses?name=" + passtext;
+          FetchHelper(new_url, 3, passtext);
+        }
+
+      }
+      else {
+        alert("Please give input! or Data not found!");
+      }
+    }
+  </script>
+</html>
